@@ -4,6 +4,7 @@ import "./globals.css";
 import { JewelryHeader } from "@/components/layout/JewelryHeader";
 import { JewelryFooter } from "@/components/layout/JewelryFooter";
 import { JewelryLanguageProvider } from "@/lib/i18n/JewelryLanguageContext";
+import { LanguageProvider } from "@/lib/i18n/LanguageContext";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -94,11 +95,13 @@ export default function RootLayout({
     <html lang="he" dir="rtl">
       <body className={`${playfair.variable} ${assistant.variable} ${heebo.variable} ${notoSansArabic.variable} font-body`}>
         <JewelryLanguageProvider>
-          <div className="min-h-screen flex flex-col">
-            <JewelryHeader />
-            <main className="flex-1">{children}</main>
-            <JewelryFooter />
-          </div>
+          <LanguageProvider>
+            <div className="min-h-screen flex flex-col">
+              <JewelryHeader />
+              <main className="flex-1">{children}</main>
+              <JewelryFooter />
+            </div>
+          </LanguageProvider>
         </JewelryLanguageProvider>
       </body>
     </html>

@@ -406,7 +406,7 @@ export const CustomDesignForm: React.FC = () => {
           <div className="space-y-6">
             <h3 className="text-h3 font-heading text-text-primary">סיכום ושליחה</h3>
             <p className="text-body text-text-secondary">
-              בדקי את הפרטים שלך ולחצי על "שלח" כדי לשלוח את הבקשה.
+              בדקי את הפרטים שלך ולחצי על &quot;שלח&quot; כדי לשלוח את הבקשה.
             </p>
             <div className="bg-background rounded-lg p-4 space-y-2 text-sm">
               <p><strong>שם:</strong> {formData.name}</p>
