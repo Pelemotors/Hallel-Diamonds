@@ -1,0 +1,661 @@
+[![Modern jewelry store display cases with items photo – Free Architecture ...](https://tse1.mm.bing.net/th/id/OIF.qSrRuMv7axVP0ClZkRnJqA?pid=Api)](https://unsplash.com/photos/modern-jewelry-store-display-cases-with-items-jPaZgriwcm4?utm_source=chatgpt.com)
+
+להלן **הסבר מלא ל-Cursor (PRD-Ready)** עבור הפרויקט החדש: **אתר תכשיטים קטלוגי + פאנל ניהול** (Next.js + Supabase), כולל **הנחיות מדיה**, **SQL סכימה**, ו-**Mock Data** — ובסוף אבקש ממך אישור להמשך לפי הזרימה שלך.
+
+---
+
+## 0) תמונות דמו מיידיות לשתילה באתר (כדי להראות אתר חי ללקוחה)
+
+בחרתי 4 תמונות “Luxury Jewelry vibe” לשימוש כדמו (חינמיות לשימוש לפי Unsplash License), שתוכל לשתול מיד:
+
+1. **Hero/Top Banner (אווירת מותג/לייפסטייל)** – טבעת אירוסין בידיים
+2. **קטלוג / Card פתיחה לקטגוריות (ניקיון + יוקרה)** – זוג טבעות זהב על רקע בהיר
+3. **About / Craft / Story (דרמה מוצרית)** – שרשרת זהב על סלע שחור
+4. **Section “Experience / Showroom / Trust”** – תצוגת חנות תכשיטים מודרנית
+
+### הנחיות שתילה (מהיר)
+
+* להוריד את התמונות ולשמור ב־`/public/demo/` בשם:
+
+  * `hero.jpg`, `rings.jpg`, `necklace.jpg`, `showroom.jpg`
+* להשתמש בהן כברירת מחדל, עד שהלקוחה תשלח מדיה מקורית.
+
+---
+
+## 1) רקע ומטרות הפרויקט
+
+### תקציר
+
+הלקוח/ה: מותג תכשיטים (יש כמה מותגים, מתחילים עם מותג אחד).
+מטרה: **אתר קטלוגי מלא** (לא חנות) עם **מחיר מוצג**, ובכל מוצר **CTA ל-WhatsApp**.
+חשוב: **פאנל ניהול פנימי** (ללא Supabase Auth), שמאפשר הזנת קטלוג ללא הגבלה, ניהול מדיה, צפייה בלידים והודעות.
+
+### יעדים עסקיים
+
+* להעלות אמון ויוקרה (UI קריטי).
+* להפוך גלישה ל-**פנייה בוואטסאפ / טופס / “עיצוב אישי”**.
+* לאפשר ללקוח להוסיף/לערוך מוצרים לבד (חיסכון זמן + סקייל).
+
+---
+
+## 2) טכנולוגיות (כפי שהפרויקט כבר בנוי)
+
+* Next.js 14.2.5 (App Router)
+* TypeScript 5.5.3
+* React 18.3.1
+* Tailwind CSS 3.4.4
+* Supabase (Postgres + Storage) — **DB בלבד** (לא Auth)
+* Node.js (API Routes / Server Actions)
+* Email: Nodemailer / Resend (בחירה אחת בפועל)
+* WhatsApp: Twilio (אופציונלי להתראות לבעלים) + לינק WhatsApp ללקוח (חובה)
+
+---
+
+## 3) קהלים ופרסונות
+
+1. **גולש/ת**: רוצה להתרשם, לראות מחיר, להבין איכות, לפנות בוואטסאפ.
+2. **בעל/ת העסק**: רוצה לעלות מוצרים, לשנות מחירים/תיאור, להוסיף סרטונים, לראות לידים.
+3. **לקוח “עיצוב אישי”**: רוצה תהליך קצר שמסביר מה צריך (צורה/קראט/זהב/תקציב) ולהשאיר פרטים.
+
+---
+
+## 4) מבנה אתר (IA) – עמודים ומסלולי משתמש
+
+### Public
+
+* `/` דף בית (Hero + קטגוריות + “למה לבחור בנו” + קולקציות נבחרות + CTA)
+* `/catalog` קטלוג (פילטרים: קטגוריה/טווח מחיר/מתכת/אבן)
+* `/catalog/[category]` קטגוריה
+* `/product/[slug]` עמוד מוצר (גלריה תמונות/וידאו, מחיר, פירוט, CTA לוואטסאפ)
+* `/custom-design` “עיצוב אישי” (מיני-אבחון/טופס חכם)
+* `/about` אודות + אמון (תעודות, תהליך, אחריות)
+* `/contact` צור קשר
+* `/privacy` `/terms` (בסיסי)
+
+### Admin (פנימי)
+
+* `/admin/login`
+* `/admin` דאשבורד (סטטיסטיקות בסיס + לידים חדשים)
+* `/admin/products` CRUD מוצרים
+* `/admin/categories` CRUD קטגוריות
+* `/admin/media` העלאת תמונות/וידאו (Supabase Storage)
+* `/admin/leads` צפייה בלידים + סטטוס טיפול
+* `/admin/content` עריכת תוכן עמודים (Home/About/Custom)
+* `/admin/settings` וואטסאפ, אינסטגרם, SEO, מותג פעיל וכו’
+
+---
+
+## 5) פיצ’רים (Functional Requirements)
+
+### 5.1 קטלוג ומוצרים
+
+* מוצר כולל:
+
+  * שם, slug, תיאור קצר, תיאור מלא
+  * מחיר (מספר) + אופציה “החל מ-”
+  * קטגוריה אחת + תגיות (optional)
+  * שדות “מתכת”, “סוג אבן”, “קראט” (optional)
+  * מדיה: מספר תמונות + סרטון (אופציונלי)
+  * סטטוס: Draft/Published
+* רשימות עם Pagination / Infinite scroll (ללא מגבלה בפועל).
+
+### 5.2 WhatsApp CTA חכם
+
+* בכל מוצר כפתור: “לרכישה/ייעוץ בוואטסאפ”
+* פתיחה עם הודעה מוכנה:
+
+  * שם מוצר, מחיר, לינק לעמוד, בקשה לזמינות/מידות.
+* אופציה ב-Admin להגדיר:
+
+  * מספר וואטסאפ ראשי
+  * תבנית הודעה
+
+### 5.3 טופס צור קשר + לידים
+
+* טופס פשוט (שם, טלפון, אימייל, הודעה).
+* שמירה ל-DB.
+* שליחת מייל לבעל העסק (Resend/Nodemailer).
+* סטטוס ליד: New / Contacted / Closed.
+
+### 5.4 “אבחון עיצוב אישי” (Lead Magnet)
+
+בדומה למה שעשית כבר באתר האחר:
+
+* טופס רב-שלבי:
+
+  1. סוג תכשיט (טבעת/שרשרת/עגילים/צמיד)
+  2. סגנון (קלאסי/מודרני/וינטג’ וכו’)
+  3. מתכת (זהב צהוב/לבן/אדום/14K/18K)
+  4. סוג יהלום (טבעי/מעבדה) + צורה (עגול/טיפה/אמרלד…)
+  5. תקציב משוער + דדליין
+  6. פרטי קשר
+* בסיום:
+
+  * תודה + “נחזור אליך תוך X שעות”
+  * CTA ל-WhatsApp עם סיכום הבחירות
+
+### 5.5 פאנל ניהול (Admin) – ללא Supabase Auth
+
+* התחברות עם משתמש אדמין פנימי:
+
+  * אימייל + סיסמה (Hash ב-DB)
+  * Session בעוגייה HttpOnly
+* הרשאות:
+
+  * Admin בלבד (Phase 1)
+  * אופציה להוסיף Editor (Phase 2)
+
+### 5.6 אנליטיקה בסיסית (חינמי)
+
+* “גלישות” בסיסי: pageviews יומיים (ללא צד ג’ בתשלום)
+* איסוף מינימלי: path + timestamp + referrer (אם יש)
+
+> אפשר גם להציע ללקוח Vercel Analytics כ-Optional, אבל ברירת המחדל תהיה DB פנימי.
+
+---
+
+## 6) UI/UX (קריטי לעולם תכשיטים)
+
+* שפה: יוקרה נקייה, מרווחים, טיפוגרפיה גדולה, מינימום “רעש”.
+* צבעים: לבן/שחור/אפור בהיר + אקסנטים זהב.
+* דגש על:
+
+  * גלריה איכותית בעמוד מוצר (Zoom / Lightbox)
+  * ניווט קטגוריות ברור
+  * CTA קבוע למובייל (WhatsApp floating)
+* ביצועים:
+
+  * תמונות ב-Next/Image, Lazy loading, blur placeholder.
+
+---
+
+## 7) אבטחה והרשאות
+
+* אין Supabase Auth.
+* Admin auth פנימי:
+
+  * Password hashing (bcrypt/argon2)
+  * Rate limit ל-`/admin/login`
+  * Session rotation
+* Supabase:
+
+  * RLS פעיל
+  * Public SELECT על טבלאות “תוכן ציבורי”
+  * Public INSERT רק לטבלאות לידים/אבחון
+  * פעולות Admin נעשות דרך Server עם Service Role (לא נחשף לקליינט)
+
+---
+
+## 8) DB – סכימת SQL (Supabase Postgres)
+
+> זה בסיס מצוין ל-Phase 1, עם יכולת גדילה למולטי-ברנד.
+
+```sql
+-- 1) Brands (כי יש "מספר מותגים")
+create table if not exists brands (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  slug text unique not null,
+  instagram_handle text,
+  whatsapp_phone text,
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+-- 2) Categories
+create table if not exists categories (
+  id uuid primary key default gen_random_uuid(),
+  brand_id uuid references brands(id) on delete cascade,
+  name text not null,
+  slug text not null,
+  sort_order int not null default 0,
+  created_at timestamptz not null default now(),
+  unique(brand_id, slug)
+);
+
+-- 3) Products
+create table if not exists products (
+  id uuid primary key default gen_random_uuid(),
+  brand_id uuid references brands(id) on delete cascade,
+  category_id uuid references categories(id) on delete set null,
+  name text not null,
+  slug text not null,
+  short_desc text,
+  long_desc text,
+  price_numeric numeric(12,2),
+  price_display text, -- למשל "₪4,900" או "החל מ- ₪2,900"
+  metal text,         -- optional
+  stone text,         -- optional
+  carat text,         -- optional
+  is_featured boolean not null default false,
+  status text not null default 'draft', -- draft/published
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique(brand_id, slug)
+);
+
+-- 4) Product media
+create table if not exists product_media (
+  id uuid primary key default gen_random_uuid(),
+  product_id uuid references products(id) on delete cascade,
+  kind text not null, -- image/video
+  url text not null,  -- Supabase Storage public URL or /public path for demo
+  alt text,
+  sort_order int not null default 0,
+  created_at timestamptz not null default now()
+);
+
+-- 5) Leads (Contact)
+create table if not exists leads (
+  id uuid primary key default gen_random_uuid(),
+  brand_id uuid references brands(id) on delete cascade,
+  source text not null default 'contact', -- contact/custom-design/product
+  name text,
+  phone text,
+  email text,
+  message text,
+  page_path text,
+  status text not null default 'new', -- new/contacted/closed
+  created_at timestamptz not null default now()
+);
+
+-- 6) Custom Design Quiz submissions
+create table if not exists custom_design_submissions (
+  id uuid primary key default gen_random_uuid(),
+  brand_id uuid references brands(id) on delete cascade,
+  answers jsonb not null, -- כל הבחירות
+  name text,
+  phone text,
+  email text,
+  page_path text default '/custom-design',
+  created_at timestamptz not null default now()
+);
+
+-- 7) Content blocks (Home/About/Custom etc)
+create table if not exists content_blocks (
+  id uuid primary key default gen_random_uuid(),
+  brand_id uuid references brands(id) on delete cascade,
+  page text not null,      -- 'home'/'about'/'custom'...
+  block_key text not null, -- 'hero_title','hero_subtitle'...
+  value jsonb not null,    -- טקסט/רשימות/CTA
+  updated_at timestamptz not null default now(),
+  unique(brand_id, page, block_key)
+);
+
+-- 8) Admin users (internal auth)
+create table if not exists admin_users (
+  id uuid primary key default gen_random_uuid(),
+  email text unique not null,
+  password_hash text not null,
+  role text not null default 'admin',
+  is_active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+-- 9) Admin sessions
+create table if not exists admin_sessions (
+  id uuid primary key default gen_random_uuid(),
+  admin_user_id uuid references admin_users(id) on delete cascade,
+  session_token text unique not null,
+  expires_at timestamptz not null,
+  created_at timestamptz not null default now()
+);
+
+-- 10) Pageviews (basic analytics)
+create table if not exists pageviews (
+  id bigserial primary key,
+  brand_id uuid references brands(id) on delete cascade,
+  path text not null,
+  referrer text,
+  user_agent text,
+  created_at timestamptz not null default now()
+);
+```
+
+### RLS (קווים מנחים)
+
+* `products`, `categories`, `product_media`, `content_blocks`:
+
+  * Public: SELECT רק `status='published'` (למוצרים)
+* `leads`, `custom_design_submissions`:
+
+  * Public: INSERT בלבד
+  * Admin בלבד: SELECT
+* Admin writes דרך Service Role בלבד.
+
+---
+
+## 9) Mock Data (כדי שהאתר יעלה עם תוכן)
+
+### 9.1 Seed בסיסי (דוגמה)
+
+```sql
+insert into brands (name, slug, instagram_handle, whatsapp_phone, is_active)
+values ('Hallel Diamonds', 'hallel-diamonds', 'halleldiamonds', '972501234567', true);
+
+-- קטגוריות
+insert into categories (brand_id, name, slug, sort_order)
+select id, 'טבעות', 'rings', 1 from brands where slug='hallel-diamonds';
+insert into categories (brand_id, name, slug, sort_order)
+select id, 'שרשראות', 'necklaces', 2 from brands where slug='hallel-diamonds';
+insert into categories (brand_id, name, slug, sort_order)
+select id, 'עגילים', 'earrings', 3 from brands where slug='hallel-diamonds';
+
+-- מוצרי דמו
+insert into products (brand_id, category_id, name, slug, short_desc, long_desc, price_numeric, price_display, metal, stone, carat, is_featured, status)
+select
+  b.id,
+  c.id,
+  'טבעת שורה יהלומים – זהב 14K',
+  'diamond-row-ring-14k',
+  'קלאסיקה נצחית. שורה משובצת יהלומים טבעיים.',
+  'טבעת שורה משובצת יהלומים טבעיים בזהב 14K. מושלמת כמתנה או כתוספת אלגנטית לשכבות טבעות.',
+  4900,
+  '₪4,900',
+  'זהב 14K',
+  'יהלומים טבעיים',
+  '—',
+  true,
+  'published'
+from brands b
+join categories c on c.brand_id=b.id and c.slug='rings'
+where b.slug='hallel-diamonds';
+
+-- מדיה לדמו (קבצים שיושבים ב/public/demo)
+insert into product_media (product_id, kind, url, alt, sort_order)
+select p.id, 'image', '/demo/rings.jpg', 'טבעות זהב על רקע בהיר', 1
+from products p where p.slug='diamond-row-ring-14k';
+```
+
+### 9.2 Admin ראשוני (בפועל יוזן דרך סקריפט)
+
+* יצירת `admin_users` עם סיסמה מוצפנת (bcrypt) — יוגדר בסקריפט seed של Node.
+
+---
+
+## 10) תכנים מלאים (Draft Copy) – כדי להציג אתר “מוכן”
+
+> אפשר לשים כ-`content_blocks` כדי שהלקוח יוכל לערוך מה-Admin בלי קוד.
+
+### Home – Hero
+
+* כותרת: **תכשיטים שמרגישים כמו “אחד מתוך מיליון”**
+* תת-כותרת: יהלומים טבעיים ויהלומי מעבדה • זהב 14K/18K • עבודת צורפות ברמת גימור גבוהה
+* CTA ראשי: **לייעוץ בוואטסאפ**
+* CTA משני: **לצפייה בקטלוג**
+
+### Home – למה לבחור בנו
+
+* כותרת: **כשזה יהלומים – אין מקום לפשרות**
+* bullets:
+
+  * תעודה גמולוגית בין-לאומית
+  * שקיפות מלאה על סוג היהלום והמתכת
+  * ליווי אישי עד התאמה מושלמת
+  * אפשרות לעיצוב אישי לפי חלום ותקציב
+
+### Home – עיצוב אישי
+
+* כותרת: **רוצה משהו שאין לאף אחד?**
+* טקסט: “ממלאים 2 דקות שאלון קצר, ואנחנו חוזרים עם הצעה מדויקת.”
+* CTA: **מתחילים אבחון עיצוב אישי**
+
+### Catalog – Header
+
+* כותרת: **הקטלוג שלנו**
+* תת-כותרת: “בחרו קטגוריה, התרשמו מהמחירים — ובקליק עוברים לוואטסאפ עם כל הפרטים.”
+
+### Product Page – CTA
+
+* כפתור: **לבדיקת זמינות/מידות בוואטסאפ**
+* מיקרו-קופי: “ההודעה תיפתח עם שם המוצר והמחיר כדי לחסוך זמן.”
+
+### About – כותרת
+
+* **מותג שנבנה על איכות, שקיפות וקראפט**
+* פסקה: “אנחנו עובדים עם סטנדרטים גבוהים של חומרי גלם, גימור ותעודות. המטרה: שתקבלו תכשיט שתרגישו איתו בטוחים וגאים — שנים קדימה.”
+
+### Contact – טקסט קצר
+
+* “רוצים המלצה מהירה? כתבו לנו בוואטסאפ או השאירו פרטים ונחזור אליכם.”
+
+---
+
+## 11) הנחיות נוספות לקורסור (מותאם לגל / לשיטת העבודה שלך)
+
+1. **לא לשבור מבנה קיים** – כל שינוי “שיטה 3: שילוב חלקי” (מה לחפש/מה למחוק/מה להדביק).
+2. **Demo ראשון חייב להיות מרשים בלי תלות במדיה של הלקוח**:
+
+   * להשתמש ב-`/public/demo/*` כברירת מחדל
+   * Mock Data ב-DB כדי שהקטלוג יראה “אמיתי”
+3. **Admin פנימי**: לא Supabase Auth, לא providers חיצוניים. רק Session Cookie.
+4. **Everything editable**: כל טקסטים מרכזיים דרך `content_blocks` + מסך `/admin/content`.
+5. **לידים “לא מתפספסים”**:
+
+   * גם טופס צור קשר
+   * גם אבחון עיצוב אישי
+   * גם קליקים לוואטסאפ (לוג אירועים מינימלי, אם רוצים)
+6. **נראות תכשיטים**:
+
+   * גלריה ברמה גבוהה
+   * Lightbox + zoom (מובייל קודם)
+
+---
+
+## 12) קובץ ENV (תבנית עם placeholders בלבד)
+
+```env
+# Supabase Configuration
+VITE_SUPABASE_URL=<הכנס כאן את כתובת Supabase>
+VITE_SUPABASE_ANON_KEY=<הכנס כאן את ה-ANON_KEY>
+SUPABASE_SERVICE_ROLE_KEY=<הכנס כאן את ה-SERVICE_ROLE_KEY (שרת בלבד!)>
+
+# Application Configuration
+VITE_APP_NAME="Jewelry Catalog"
+VITE_BASE_URL=<כתובת הפרויקט בפרודקשן או localhost>
+
+# WhatsApp Configuration
+VITE_WHATSAPP_PHONE=<מספר טלפון בפורמט בינלאומי, למשל 9725XXXXXXXX>
+
+# Admin (internal auth bootstrap)
+ADMIN_SEED_EMAIL=<אימייל אדמין>
+ADMIN_SEED_PASSWORD=<סיסמה התחלתית חזקה>
+
+# Email (choose one)
+RESEND_API_KEY=<...>
+SMTP_HOST=<...>
+SMTP_USER=<...>
+SMTP_PASS=<...>
+
+# Twilio (optional for admin notifications)
+TWILIO_ACCOUNT_SID=<...>
+TWILIO_AUTH_TOKEN=<...>
+TWILIO_WHATSAPP_FROM=<whatsapp:+1415...>
+```
+
+---
+
+נספח PRD — Design System (Luxury Jewelry)
+1) עקרונות ויזואליים
+
+Luxury Minimal: הרבה “אוויר”, מעט טקסט, דגש תמונה.
+
+חומריות: רקעים נקיים, קונטרסט עדין, אקסנט זהב מינימלי.
+
+RTL מלא: יישור ימינה, אך כרטיסי מוצר וגרידים נשארים “בינלאומיים” (center/clean).
+
+2) פלטת צבעים (Hex)
+
+קלה, אלגנטית, לא צועקת.
+
+Base
+
+Background: #FFFFFF
+
+Surface: #FAFAFA (כרטיסים/בלוקים)
+
+Text Primary: #0B0B0C
+
+Text Secondary: #5B5B60
+
+Border/Subtle: #E7E7EA
+
+Gold Accent (לכפתורים/היילייטים בלבד)
+
+Gold: #C8A24A
+
+Gold Hover/Dark: #B38C34
+
+States
+
+Success: #1A7F5A
+
+Error: #B42318
+
+כלל ברזל: זהב = 5–10% מהמסך מקסימום.
+
+3) טיפוגרפיה (גדלים + משקלים)
+
+פונטים מומלצים (Google Fonts):
+
+כותרות: Playfair Display (סריף יוקרתי)
+
+טקסט/כפתורים: Assistant או Heebo (עברית נקייה)
+
+Scale (Desktop / Mobile)
+
+H1: 48px / 32px (weight 600–700)
+
+H2: 36px / 28px
+
+H3: 24px / 20px
+
+Body: 16–18px / 16px
+
+Small: 14px / 13px
+
+Button: 15–16px (semi-bold)
+
+Line-height:
+
+Titles: 1.1–1.2
+
+Body: 1.6–1.8
+
+4) פרופורציות וגריד
+
+Max width: 1200px
+
+Padding: 24px מובייל, 48–64px דסקטופ
+
+Grid מוצרים:
+
+Desktop: 3–4 בעמודה (ברירת מחדל 4)
+
+Tablet: 2–3
+
+Mobile: 2 (או 1 במוצרים “פרימיום”)
+
+Card Product
+
+יחס תמונה מומלץ: 4:5 (קלאסי לאופנה/תכשיטים)
+
+כותרת מוצר: שורה אחת + ellipsis
+
+מחיר: גדול ומודגש, מתחת לשם
+
+5) רכיבי UI (סטנדרט אחיד)
+
+Buttons
+
+Primary (Gold): רקע זהב, טקסט שחור/לבן לפי ניגודיות
+
+Secondary (Outline): מסגרת #0B0B0C רקע שקוף
+
+WhatsApp CTA: כפתור מלא (לא ירוק “זועק”), אלא כהמשך לשפה:
+
+אייקון WhatsApp + טקסט
+
+אפשר פס דק ירקרק מינימלי רק כאייקון, לא רקע ירוק ענק
+
+Inputs
+
+גובה: 44px
+
+Border: #E7E7EA
+
+Focus ring: זהב עדין #C8A24A עם opacity
+
+Badges
+
+NEW / BESTSELLER קטן, רקע #FAFAFA, מסגרת זהב דקה
+
+6) מדיה (תמונות/וידאו) — סטנדרט חובה
+
+תמונות מוצר:
+
+מינימום 2000px רוחב (לזום)
+
+רקע: לבן/אפור בהיר
+
+סט אחיד לכל הקטלוג (אותו יחס 4:5)
+
+Hero Video:
+
+8–15 שניות
+
+ללא טקסט על הוידאו (טקסט תמיד ב־UI)
+
+באתר:
+
+שימוש ב־Next/Image
+
+lazy loading
+
+blur placeholder
+
+הגבלת משקל: עד ~300KB לתמונה לאחר אופטימיזציה (אידאלי)
+
+7) אנימציות ומיקרו־אינטראקציות
+
+Hover עדין בכרטיס מוצר: scale 1.02 + shadow קל
+
+Fade-in עדין לסקשנים (0.4–0.6 שניות)
+
+אין אנימציות “קופצניות” — יוקרה = רוגע.
+
+8) טון כתיבה ומיקרו־קופי
+
+קצר, בטוח, יוקרתי.
+
+בלי “מבצעים”, בלי “זול”, בלי “מהיר וזול”.
+
+משפטי CTA:
+
+“לבדיקת זמינות בוואטסאפ”
+
+“קבלו ייעוץ אישי”
+
+“מתחילים אבחון קצר”
+
+9) דף מוצר — פריסה מומלצת (קריטי)
+
+Desktop: גלריה משמאל, תוכן מימין
+
+Mobile: גלריה למעלה, CTA דביק בתחתית
+
+סדר:
+
+שם מוצר
+
+מחיר
+
+מפרט קצר (3–5 שורות)
+
+CTA WhatsApp
+
+טופס “נחזור אליכם”
+
+Trust block
+
+Related

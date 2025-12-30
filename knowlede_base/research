@@ -1,0 +1,261 @@
+SEO, Media & Design Guidelines for a Luxury Jewelry Catalogue Website
+Overview
+
+This report compiles best‑practice guidance on search‑engine optimisation (SEO), media production and design for a luxury jewellery catalogue website built with Next.js, TypeScript and Supabase. It draws on recognised SEO specialists, branding experts and jewellery industry publications. Each recommendation is accompanied by citations to external sources. The site’s primary goals are to showcase jewellery collections, encourage enquiries via WhatsApp and capture leads through a custom design questionnaire, while providing a premium, accessible user experience.
+
+1 SEO Guidelines
+1.1 On‑page SEO
+
+Title tags and meta descriptions: Create concise, descriptive title tags and meta descriptions incorporating primary keywords. For example, a product page should include the product type and brand name. SEO experts emphasise that clear titles, meta descriptions and header tags improve click‑through rates and indexing
+loganix.com
+.
+
+Short, descriptive URLs: Use human‑readable, keyword‑rich URLs (e.g., /product/diamond-row-ring-14k)
+loganix.com
+. Do not include file extensions or long query strings.
+
+Header tags & hierarchy: Use semantic headings (<h1> for page title, <h2> for sections). Headers help search engines understand content structure and improve accessibility
+loganix.com
+.
+
+High‑quality, original copy: Avoid AI‑generated or plagiarised descriptions. A 2022 update to Google’s Helpful Content system penalises generic, auto‑generated content; original product descriptions and first‑hand articles improve rankings
+transpacific-software.com
+.
+
+Keyword targeting: Research relevant keywords (e.g., “diamond engagement ring”, “14K gold pendant”) and incorporate them naturally in headings, body copy and alt text. Focus on long‑tail phrases (e.g., “custom diamond necklace design Israel”) for targeted traffic
+loganix.com
+. Avoid keyword stuffing.
+
+Internal linking: Link related products, guides and blog posts to help users navigate and spread link equity
+loganix.com
+. Include a “related products” section on product pages.
+
+Mobile‑first & page speed: Many jewellery buyers browse on mobile; ensure responsive design, compressed images and caching. Fast loading is critical for SEO and user experience
+blog.picupmedia.com
+scaledelight.com
+.
+
+HTTPS: Secure the site with HTTPS to gain trust and meet Google’s security standards
+loganix.com
+.
+
+1.2 Structured Data & Sitemaps
+
+Product schema: Implement Schema.org Product and Offer markup on each product page. Custom implementation is recommended because general‑purpose plugins may not support jewellery‑specific attributes such as gemstone type, metal or return policy
+transpacific-software.com
+. Include fields for product name, description, SKU, price, currency, availability and high‑resolution image URLs. If local pickup or custom orders are offered, include hasMeasurementType and itemCondition fields.
+
+Return policy schema: Jewellery sites often offer flexible return policies; implement merchantReturnPolicy with detailed return information
+transpacific-software.com
+.
+
+Video & image sitemaps: Since jewellery is highly visual, generate dedicated video and image sitemaps to ensure search engines index media content. Video and image sitemaps can account for roughly 20 % of SEO traffic according to a jewellery‑SEO expert
+transpacific-software.com
+. Include title, description, thumbnailLoc, contentLoc and duration for videos.
+
+XML sitemap & robots.txt: Submit a comprehensive XML sitemap (pages, collections, products, guides) and allow search engines to crawl relevant pages while blocking admin paths. Update the sitemap automatically when new products or collections are added.
+
+1.3 Image & Media Optimisation
+
+High‑resolution images with descriptive filenames and alt text: Use high‑resolution images (2000 px width) for each product; rename files to include keywords (e.g., diamond-row-ring-14k.jpg)
+scaledelight.com
+. Provide concise alt text describing metal, stone and shape for accessibility and SEO.
+
+Next‑generation formats: Serve images in WebP or AVIF formats for faster loading
+scaledelight.com
+. Keep file sizes <300 KB after compression.
+
+Multiple angles and media: Photograph each product from multiple angles (rings: 3+ shots; bracelets: 2–3; necklaces: 1–2; earrings: 1–2), as recommended by jewellery photography experts
+blog.picupmedia.com
+. Include lifestyle images, scale shots to show size, and 360‑degree videos. This improves user engagement and product page dwell time
+blog.picupmedia.com
+. Provide zoom or lightbox functionality.
+
+Optimised video: Compress videos (MP4 or WebM), keep them under 15 s for hero sections, and host them via an efficient CDN. Use transcripts/captions and include them in video sitemaps.
+
+1.4 Off‑page SEO & Content Strategy
+
+Local SEO & Google Business Profile: If the business has a physical showroom, create and optimise a Google Business Profile with accurate NAP (name, address, phone), photos and reviews.
+
+Content marketing: Publish blogs or guides (e.g., “how to choose an engagement ring”, “difference between natural and lab diamonds”) to target long‑tail queries and build authority. Content should be original, well researched and incorporate keywords naturally; avoid AI‑generated or repetitive text
+transpacific-software.com
+.
+
+Link building: Earn backlinks from relevant jewellery blogs, fashion magazines and influencers. Provide shareable content (guides, infographics) and encourage partnerships.
+
+Accessibility and ADA compliance: An accessible website (alt text, high contrast, keyboard navigation) not only serves all users but also benefits SEO
+transpacific-software.com
+.
+
+2 Media Guidelines
+2.1 Photography
+
+Studio shots: Use a non‑distracting background (white, grey or black) so jewellery remains the focal point
+blog.picupmedia.com
+. Ensure consistent lighting and angles across the catalogue; colour variations and inconsistent shadows can diminish perceived quality. Maintain the same aspect ratio (4:5) for all product images to ensure uniform grids.
+
+Lifestyle imagery: Include contextual photos showing jewellery worn by people to help customers visualise pieces. Use diverse models and environments consistent with the brand’s values.
+
+Scale shots: Provide a photo showing the piece next to a familiar object (e.g., a hand or coin) to indicate size
+blog.picupmedia.com
+.
+
+Feature and artistic shots: Capture macro details (engraving, settings) and creative arrangements for use in social media and hero sections. According to jewellery design experts, strong visuals and emotive storytelling help customers imagine the piece in their life
+lionsorbet.com
+.
+
+2.2 Video & Interactive Content
+
+Hero video: A short (8–15 s) looped video in the hero section can convey craftsmanship and luxury. Avoid overlay text; instead, place text in separate elements for accessibility. Provide a fallback static image.
+
+360‑degree videos: Offer interactive 360° views for key products. Host videos on a fast CDN and implement lazy loading.
+
+User‑generated content: Encourage customers to share photos or videos wearing the jewellery; feature selected content on the site with permission.
+
+2.3 File Management & Metadata
+
+Store all media in Supabase Storage or a CDN accessible via public URLs. Organise assets by brand, category and product ID.
+
+Tag images with meaningful metadata (ALT tags, titles) and maintain consistent naming conventions. This improves SEO and simplifies asset management.
+
+3 Design Guidelines
+3.1 Brand Identity & Colour Palette
+
+Luxury jewellery brands should evoke sophistication and trust. Experts note that colour choices significantly influence first impressions; 90 % of product judgments are based on colour
+blog.picupmedia.com
+. A neutral, minimalist palette keeps attention on the jewellery and conveys timelessness
+zakkacanada.com
+. Recommended colours:
+
+Purpose	Colour (Hex)	Notes
+Backgrounds	#FFFFFF (white) and #F7F7F9 (off‑white)	Clean, neutral backdrops; subtle variations can separate sections.
+Primary text	#0B0B0C (nearly black)	High contrast for legibility.
+Secondary text	#5B5B60 (dark grey)	For less critical information.
+Accent/Highlight	#C8A24A (gold)	Use sparingly (buttons, icons, hover states); too much gold can feel gaudy.
+Borders/Dividers	#E7E7EA (light grey)	Subtle separation between elements.
+
+Limit the palette to three core colours (white/black/gold) plus neutrals. Studies on jewellery display design suggest that neutral colours like white, black and grey keep the focus on the jewellery and create a timeless backdrop
+zakkacanada.com
+. Incorporate textures (e.g., subtle marble or linen) to add depth without distracting from products.
+
+3.2 Typography
+
+Typography conveys brand personality. For a luxury brand, use a combination of a refined serif font for headings and a modern sans‑serif for body text. A Shopify typography guide notes that a luxury jewellery brand might choose formal fonts to evoke timelessness
+shopify.com
+. It also recommends using no more than two or three typefaces and establishing hierarchy
+shopify.com
+.
+
+Headings: Playfair Display or Cormorant Garamond (serif, elegant). Use varying weights (600–700) and sizes (e.g., H1 48 px on desktop, 32 px on mobile). Line height should be 1.1–1.2.
+
+Body & UI text: Assistant or Heebo (Hebrew support, clean sans‑serif). Use 16 – 18 px for body copy with line height 1.6–1.8 for readability.
+
+Buttons and small text: 14 – 16 px, semi‑bold weight.
+
+3.3 Layout & Spacing
+
+Grid system: Use a responsive grid with maximum content width of 1200 px. On desktop, display products in 3–4 columns; on tablets, 2–3 columns; on mobile, 1–2 columns. This ensures comfortable browsing on all devices.
+
+Spacing: Use consistent padding (24 px mobile, 48–64 px desktop) around sections and between elements. Generous whitespace conveys luxury and improves readability.
+
+Image aspect ratio: Maintain a consistent 4:5 ratio for product images to ensure uniform grids.
+
+Navigation: Provide a clear hierarchy: top bar with categories (rings, necklaces, bracelets, earrings, pendants, custom design), search icon, and contact/WhatsApp icons. Use breadcrumb navigation in collections and product pages to help users return to previous levels
+blog.picupmedia.com
+.
+
+Footer: Include links to categories, customer service pages (shipping, returns), contact details, privacy policy, and social media icons.
+
+3.4 Interactive Elements & Accessibility
+
+Buttons: Primary buttons use gold background (#C8A24A) with dark text; secondary buttons use outline style. Round corners (4–6 px) and subtle shadows convey softness.
+
+Hover & focus states: Provide subtle hover animations (e.g., slight scale or colour change) and focus outlines to meet accessibility guidelines.
+
+Forms: Use clearly labelled fields, appropriate input types (tel/email), and accessible error messages. For the custom design questionnaire, implement multi‑step progress with clear instructions.
+
+Accessibility: Ensure colour contrast ratios meet WCAG AA standards. Provide alt text for all images and video transcripts. Allow keyboard navigation and include ARIA labels.
+
+4 Implementation Notes for Cursor
+
+To construct the site with Next.js and Supabase according to the above guidelines, follow these implementation notes:
+
+4.1 Architecture
+
+Next.js 14 (App Router): Use file‑based routing for pages: / (home), /catalog, /catalog/[category], /product/[slug], /custom-design, /about, /contact. Use app/ directory with server components for SEO‑critical content. react and tailwindcss should be configured for RTL support (via tailwindcss-rtl plugin) to ensure Hebrew layout.
+
+State management: Use React context or Zustand for cartless state (e.g., form progress, filters). For admin panel, use server actions and API routes to interact with Supabase.
+
+Supabase: Use Postgres for storing brands, categories, products, media, leads and custom design submissions (see SQL schema above). Use Supabase Storage for images and videos. Implement Row Level Security (RLS) to allow public read for published products and restrict writes to server actions.
+
+Admin authentication: Implement internal email/password auth stored in admin_users table. Use bcrypt/argon2 for password hashing. Use secure session cookies and server actions for login/logout.
+
+4.2 Media Integration
+
+Demo assets: Until the client supplies proprietary photography, use high‑quality placeholders (see the image recommendations at the top of this report). Save them in /public/demo/ and reference them in hero sections, category cards and about page.
+
+Supabase Storage integration: Provide an admin interface to upload images and videos. On upload, automatically generate WebP versions and thumbnails (e.g., using a serverless function or library like Sharp). Save file metadata (URL, type, sort order) to product_media table.
+
+4.3 SEO & Metadata Implementation
+
+Use next/head or the new metadata API to set title tags, meta descriptions and Open Graph tags. Programmatically generate meta titles like HALLEL Diamonds – Engagement Rings & Fine Jewelry or Diamond Row Ring 14K – HALLEL Diamonds. Include alt text and descriptive title attributes for images.
+
+Add JSON‑LD structured data via <script type="application/ld+json"> in Product pages, reflecting the product schema described earlier.
+
+Generate dynamic sitemap.xml and robots.txt files. Generate separate video and image sitemaps linking to Supabase Storage files.
+
+4.4 Performance & Accessibility
+
+Use Next.js Image component with responsive sizes and lazy loading. Preload critical images (hero). Use link rel=preload for fonts.
+
+Use server components and streaming to reduce JavaScript on first load. Defer non‑critical scripts.
+
+Test core web vitals (LCP, FID, CLS) and adjust as needed (e.g., reorder CSS/JS, use CSS containment).
+
+Test accessibility with tools like Lighthouse and axe; ensure forms and buttons have appropriate labels.
+
+4.5 SEO & Content Strategy Implementation
+
+Blog/Guides: Create a directory app/guides/[slug] using MDX for articles about diamond grades, ring sizing, etc. Each post should include high‑quality images, internal links to products and call‑outs for custom design services.
+
+Link building & outreach: Suggest the client collaborate with influencers and magazines; produce guest posts or editorial content referencing the site.
+
+Monitoring: Set up Google Analytics 4 to track events: whatsapp_click, lead_submit, assessment_submit, page_view. Use a simple dashboard in the admin panel summarising leads by source.
+
+5 Summary of Key Recommendations
+
+Structured data & sitemaps: Use custom Product and ReturnPolicy schema implementations
+transpacific-software.com
+ and generate video/image sitemaps
+transpacific-software.com
+.
+
+High‑quality, original copy: Avoid AI‑generated descriptions; write unique product texts and blog articles
+transpacific-software.com
+.
+
+Visual guidelines: Neutral colour palette (white, off‑white, dark grey) with gold accents; serif headings paired with sans‑serif body fonts
+zakkacanada.com
+shopify.com
+shopify.com
+. Maintain 4:5 image ratio and consistent grid spacing.
+
+Media production: Use high‑resolution images with multiple angles, lifestyle shots, scale shots and 360‑degree videos
+blog.picupmedia.com
+lionsorbet.com
+. Serve images in WebP format with descriptive alt text and filenames
+scaledelight.com
+.
+
+User experience: Provide intuitive navigation, mobile‑first design, accessible forms, and clear CTAs (WhatsApp, design quiz). Implement performance optimisations (lazy loading, caching) and measure core web vitals
+blog.picupmedia.com
+scaledelight.com
+.
+
+Lead capture & contact: Offer a multi‑step design quiz to collect leads even if users do not click the WhatsApp link; store responses in Supabase and provide follow‑up templates.
+
+Admin panel: Build an internal admin dashboard (without Supabase auth) to manage products, categories, media, content blocks and leads. Use hashed passwords and secure sessions.
+
+By following these guidelines, the development team can build a polished, SEO‑friendly jewellery catalogue site that aligns with the brand’s luxury positioning and drives qualified leads.
+
+שים לב כמובן שהכל צריך להיות בעברית ובאנגלית
