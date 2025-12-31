@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { ProductCard } from '@/components/catalog/ProductCard';
-import { supabaseServer } from '@/lib/supabaseServerClient';
+import { supabaseServer, isSupabaseConfigured } from '@/lib/supabaseServerClient';
+import { mockProducts, mockCategories } from '@/lib/mockData';
 
 export const metadata: Metadata = {
   title: 'הקטלוג שלנו | Hallel Diamonds',
@@ -18,28 +19,127 @@ export const dynamic = 'force-dynamic';
 
 async function getProducts(category?: string) {
   try {
-    const url = category
-      ? `/api/products?category=${category}`
-      : '/api/products';
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}${url}`, {
-      cache: 'no-store',
-    });
-    const data = await response.json();
-    return data.products || [];
+    // Try Supabase first if available
+    if (isSupabaseConfigured()) {
+      try {
+        const brandSlug = 'hallel-diamonds';
+        const { data: brand } = await supabaseServer
+          .from('brands')
+          .select('id')
+          .eq('slug', brandSlug)
+          .eq('is_active', true)
+          .single();
+
+        if (brand) {
+          let query = supabaseServer
+            .from('products')
+            .select(`
+              id,
+              name,
+              slug,
+              short_desc,
+              long_desc,
+              price_numeric,
+              price_display,
+              metal,
+              stone,
+              carat,
+              is_featured,
+              status,
+              created_at,
+              category_id,
+              categories (
+                id,
+                name,
+                slug
+              ),
+              product_media (
+                id,
+                url,
+                alt,
+                kind,
+                sort_order
+              )
+            `)
+            .eq('brand_id', brand.id)
+            .eq('status', 'published')
+            .order('is_featured', { ascending: false })
+            .order('created_at', { ascending: false });
+
+          if (category) {
+            const { data: categoryData } = await supabaseServer
+              .from('categories')
+              .select('id')
+              .eq('brand_id', brand.id)
+              .eq('slug', category)
+              .single();
+
+            if (categoryData) {
+              query = query.eq('category_id', categoryData.id);
+            }
+          }
+
+          const { data, error } = await query;
+
+          if (!error && data && data.length > 0) {
+            return data;
+          }
+        }
+      } catch (dbError) {
+        // Fall through to mock data
+        console.log('Using mock data (Supabase error)');
+      }
+    }
+
+    // Fallback to mock data
+    let products = [...mockProducts];
+
+    if (category) {
+      products = products.filter(p => p.categories?.slug === category);
+    }
+
+    return products;
   } catch (error) {
+    console.error('Error getting products:', error);
     return [];
   }
 }
 
 async function getCategories() {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/categories`, {
-      cache: 'no-store',
-    });
-    const data = await response.json();
-    return data.categories || [];
+    // Try Supabase first if available
+    if (isSupabaseConfigured()) {
+      try {
+        const brandSlug = 'hallel-diamonds';
+        const { data: brand } = await supabaseServer
+          .from('brands')
+          .select('id')
+          .eq('slug', brandSlug)
+          .eq('is_active', true)
+          .single();
+
+        if (brand) {
+          const { data, error } = await supabaseServer
+            .from('categories')
+            .select('id, name, slug, sort_order')
+            .eq('brand_id', brand.id)
+            .order('sort_order', { ascending: true });
+
+          if (!error && data && data.length > 0) {
+            return data;
+          }
+        }
+      } catch (dbError) {
+        // Fall through to mock data
+        console.log('Using mock categories (Supabase error)');
+      }
+    }
+
+    // Fallback to mock data
+    return mockCategories;
   } catch (error) {
-    return [];
+    console.error('Error getting categories:', error);
+    return mockCategories;
   }
 }
 

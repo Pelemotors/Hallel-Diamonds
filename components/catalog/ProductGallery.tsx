@@ -28,7 +28,20 @@ export const ProductGallery: React.FC<ProductGalleryProps> = ({ media, productNa
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const imageRef = useRef<HTMLDivElement>(null);
 
-  const images = media.filter(m => m.kind === 'image').sort((a, b) => a.sort_order - b.sort_order);
+  const baseUrl = typeof window !== 'undefined'
+    ? window.location.origin
+    : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+
+  const normalizeImageUrl = (url: string) => {
+    if (url.startsWith('http')) return url;
+    if (url.startsWith('/')) return `${baseUrl}${url}`;
+    return `${baseUrl}/${url}`;
+  };
+
+  const images = media
+    .filter(m => m.kind === 'image')
+    .map(img => ({ ...img, url: normalizeImageUrl(img.url) }))
+    .sort((a, b) => a.sort_order - b.sort_order);
   const mainImage = images[selectedIndex] || images[0];
 
   if (!mainImage) {

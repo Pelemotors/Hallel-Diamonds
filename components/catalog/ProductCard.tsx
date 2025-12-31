@@ -35,7 +35,15 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, brandSlug }) => {
   const media = product.product_media || product.media || [];
   const mainImage = media.find((m: any) => m.kind === 'image') || media[0];
-  const imageUrl = mainImage?.url || '/demo/rings.jpg';
+  const baseUrl = typeof window !== 'undefined'
+    ? window.location.origin
+    : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const rawImageUrl = mainImage?.url || '/demo/rings.jpg';
+  const imageUrl = rawImageUrl.startsWith('http') 
+    ? rawImageUrl 
+    : rawImageUrl.startsWith('/') 
+    ? `${baseUrl}${rawImageUrl}`
+    : `${baseUrl}/${rawImageUrl}`;
 
   return (
     <div className="product-card-hover bg-surface rounded-lg overflow-hidden border border-border animate-fade-in">
